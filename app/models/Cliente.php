@@ -13,86 +13,120 @@ class Cliente
     // LISTAR CLIENTES
     // ======================================
 
-    public function listar($empresa_id)
-    {
-        $this->db->query("
-            SELECT *
-            FROM clientes
-            WHERE empresa_id = :empresa_id
-            ORDER BY id DESC
-        ");
+public function listar($empresa_id)
+{
+    $this->db->query("
+        SELECT
 
-        $this->db->bind(':empresa_id', $empresa_id);
+            c.*,
 
-        return $this->db->resultSet();
-    }
+            m.nombre AS ciudad,
+
+            d.nombre AS departamento,
+
+            r.nombre AS regimen,
+
+            rf.nombre AS responsabilidad_fiscal,
+
+            td.nombre AS tipo_documento_nombre
+
+        FROM clientes c
+
+        LEFT JOIN municipios m
+            ON c.municipio_id = m.id
+
+        LEFT JOIN departamentos d
+            ON c.departamento_id = d.id
+
+        LEFT JOIN regimenes r
+            ON c.regimen_id = r.id
+
+        LEFT JOIN responsabilidades_fiscales rf
+            ON c.responsabilidad_fiscal_id = rf.id
+
+        LEFT JOIN tipos_documento td
+            ON c.tipo_documento_id = td.id
+
+        WHERE c.empresa_id = :empresa_id
+
+        ORDER BY c.id DESC
+    ");
+
+    $this->db->bind(':empresa_id', $empresa_id);
+
+    return $this->db->resultSet();
+}
 
     // ======================================
     // CREAR CLIENTE
     // ======================================
 
-    public function crear($data)
-    {
-        $this->db->query("
-            INSERT INTO clientes (
+public function crear($data)
+{
+    $this->db->query("
+        INSERT INTO clientes (
 
-                empresa_id,
-                tipo_persona,
-                tipo_documento,
-                numero_documento,
+            empresa_id,
 
-                nombres,
-                apellidos,
+            tipo_persona,
+            tipo_documento_id,
+            numero_documento,
 
-                razon_social,
-                nit,
-                dv,
+            nombres,
+            apellidos,
 
-                telefono,
-                correo,
-                direccion,
+            razon_social,
+            nit,
+            dv,
 
-                ciudad,
-                departamento,
+            telefono,
+            correo,
+            direccion,
 
-                regimen,
-                responsabilidad_fiscal
+            municipio_id,
+            departamento_id,
 
-            ) VALUES (
+            regimen_id,
+            responsabilidad_fiscal_id
 
-                :empresa_id,
-                :tipo_persona,
-                :tipo_documento,
-                :numero_documento,
+        ) VALUES (
 
-                :nombres,
-                :apellidos,
+            :empresa_id,
 
-                :razon_social,
-                :nit,
-                :dv,
+            :tipo_persona,
+            :tipo_documento_id,
+            :numero_documento,
 
-                :telefono,
-                :correo,
-                :direccion,
+            :nombres,
+            :apellidos,
 
-                :ciudad,
-                :departamento,
+            :razon_social,
+            :nit,
+            :dv,
 
-                :regimen,
-                :responsabilidad_fiscal
-            )
-        ");
+            :telefono,
+            :correo,
+            :direccion,
 
-        // BINDS
+            :municipio_id,
+            :departamento_id,
 
-        foreach($data as $key => $value){
+            :regimen_id,
+            :responsabilidad_fiscal_id
+        )
+    ");
 
-            $this->db->bind(':' . $key, $value);
-        }
+    // ======================================
+    // BINDS
+    // ======================================
 
-        return $this->db->execute();
+    foreach($data as $key => $value){
+
+        $this->db->bind(':' . $key, $value);
     }
+
+    return $this->db->execute();
+}
 
     // ======================================
     // OBTENER CLIENTE
@@ -129,7 +163,7 @@ public function actualizar($data)
         UPDATE clientes SET
 
             tipo_persona = :tipo_persona,
-            tipo_documento = :tipo_documento,
+            tipo_documento_id = :tipo_documento_id,
             numero_documento = :numero_documento,
 
             nombres = :nombres,
@@ -143,14 +177,11 @@ public function actualizar($data)
             correo = :correo,
             direccion = :direccion,
 
-            ciudad = :ciudad,
-            departamento = :departamento,
-
             municipio_id = :municipio_id,
             departamento_id = :departamento_id,
 
-            regimen = :regimen,
-            responsabilidad_fiscal = :responsabilidad_fiscal,
+            regimen_id = :regimen_id,
+            responsabilidad_fiscal_id = :responsabilidad_fiscal_id,
 
             estado = :estado
 
@@ -158,77 +189,10 @@ public function actualizar($data)
         AND empresa_id = :empresa_id
     ");
 
-    // ======================================
-    // IDs
-    // ======================================
+    foreach($data as $key => $value){
 
-    $this->db->bind(':id', $data['id']);
-
-    $this->db->bind(':empresa_id', $data['empresa_id']);
-
-    // ======================================
-    // PERSONA
-    // ======================================
-
-    $this->db->bind(':tipo_persona', $data['tipo_persona']);
-
-    $this->db->bind(':tipo_documento', $data['tipo_documento']);
-
-    $this->db->bind(':numero_documento', $data['numero_documento']);
-
-    // ======================================
-    // NATURAL
-    // ======================================
-
-    $this->db->bind(':nombres', $data['nombres']);
-
-    $this->db->bind(':apellidos', $data['apellidos']);
-
-    // ======================================
-    // JURIDICA
-    // ======================================
-
-    $this->db->bind(':razon_social', $data['razon_social']);
-
-    $this->db->bind(':nit', $data['nit']);
-
-    $this->db->bind(':dv', $data['dv']);
-
-    // ======================================
-    // CONTACTO
-    // ======================================
-
-    $this->db->bind(':telefono', $data['telefono']);
-
-    $this->db->bind(':correo', $data['correo']);
-
-    $this->db->bind(':direccion', $data['direccion']);
-
-    // ======================================
-    // UBICACION
-    // ======================================
-
-    $this->db->bind(':ciudad', $data['ciudad']);
-
-    $this->db->bind(':departamento', $data['departamento']);
-
-    $this->db->bind(':municipio_id', $data['municipio_id']);
-
-    $this->db->bind(':departamento_id', $data['departamento_id']);
-
-    // ======================================
-    // DIAN
-    // ======================================
-
-    $this->db->bind(':regimen', $data['regimen']);
-
-    $this->db->bind(':responsabilidad_fiscal', $data['responsabilidad_fiscal']);
-
-    // ======================================
-    // ESTADO
-    // ======================================
-
-    $this->db->bind(':estado', $data['estado']);
+        $this->db->bind(':' . $key, $value);
+    }
 
     return $this->db->execute();
 }

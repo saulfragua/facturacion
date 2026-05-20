@@ -54,14 +54,18 @@
                     >
 
                         <option value="NATURAL"
-                            <?= $data['cliente']->tipo_persona == 'NATURAL' ? 'selected' : ''; ?>>
+                            <?= $data['cliente']->tipo_persona == 'NATURAL'
+                                ? 'selected'
+                                : ''; ?>>
 
                             Natural
 
                         </option>
 
                         <option value="JURIDICA"
-                            <?= $data['cliente']->tipo_persona == 'JURIDICA' ? 'selected' : ''; ?>>
+                            <?= $data['cliente']->tipo_persona == 'JURIDICA'
+                                ? 'selected'
+                                : ''; ?>>
 
                             Jurídica
 
@@ -79,31 +83,32 @@
                     </label>
 
                     <select
-                        name="tipo_documento"
+                        name="tipo_documento_id"
                         required
                         class="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-4 focus:ring-orange-200 focus:border-orange-500"
                     >
 
-                        <option value="CC"
-                            <?= $data['cliente']->tipo_documento == 'CC' ? 'selected' : ''; ?>>
-
-                            Cédula
-
+                        <option value="">
+                            Seleccione
                         </option>
 
-                        <option value="NIT"
-                            <?= $data['cliente']->tipo_documento == 'NIT' ? 'selected' : ''; ?>>
+                        <?php foreach($data['tipos_documento'] as $tipo): ?>
 
-                            NIT
+                            <option
+                                value="<?= $tipo->id; ?>"
 
-                        </option>
+                                <?= $data['cliente']->tipo_documento_id == $tipo->id
+                                    ? 'selected'
+                                    : ''; ?>
+                            >
 
-                        <option value="CE"
-                            <?= $data['cliente']->tipo_documento == 'CE' ? 'selected' : ''; ?>>
+                                <?= $tipo->codigo; ?>
+                                -
+                                <?= $tipo->nombre; ?>
 
-                            Cédula Extranjería
+                            </option>
 
-                        </option>
+                        <?php endforeach; ?>
 
                     </select>
 
@@ -410,12 +415,34 @@
                         Régimen
                     </label>
 
-                    <input
-                        type="text"
-                        name="regimen"
-                        value="<?= $data['cliente']->regimen; ?>"
+                    <select
+                        name="regimen_id"
                         class="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-4 focus:ring-orange-200 focus:border-orange-500"
                     >
+
+                        <option value="">
+                            Seleccione
+                        </option>
+
+                        <?php foreach($data['regimenes'] as $regimen): ?>
+
+                            <option
+                                value="<?= $regimen->id; ?>"
+
+                                <?= $data['cliente']->regimen_id == $regimen->id
+                                    ? 'selected'
+                                    : ''; ?>
+                            >
+
+                                <?= $regimen->codigo; ?>
+                                -
+                                <?= $regimen->nombre; ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
 
                 </div>
 
@@ -426,12 +453,34 @@
                         Responsabilidad Fiscal
                     </label>
 
-                    <input
-                        type="text"
-                        name="responsabilidad_fiscal"
-                        value="<?= $data['cliente']->responsabilidad_fiscal; ?>"
+                    <select
+                        name="responsabilidad_fiscal_id"
                         class="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-4 focus:ring-orange-200 focus:border-orange-500"
                     >
+
+                        <option value="">
+                            Seleccione
+                        </option>
+
+                        <?php foreach($data['responsabilidades'] as $responsabilidad): ?>
+
+                            <option
+                                value="<?= $responsabilidad->id; ?>"
+
+                                <?= $data['cliente']->responsabilidad_fiscal_id == $responsabilidad->id
+                                    ? 'selected'
+                                    : ''; ?>
+                            >
+
+                                <?= $responsabilidad->codigo; ?>
+                                -
+                                <?= $responsabilidad->nombre; ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
 
                 </div>
 
@@ -448,14 +497,18 @@
                     >
 
                         <option value="1"
-                            <?= $data['cliente']->estado == 1 ? 'selected' : ''; ?>>
+                            <?= $data['cliente']->estado == 1
+                                ? 'selected'
+                                : ''; ?>>
 
                             Activo
 
                         </option>
 
                         <option value="0"
-                            <?= $data['cliente']->estado == 0 ? 'selected' : ''; ?>>
+                            <?= $data['cliente']->estado == 0
+                                ? 'selected'
+                                : ''; ?>>
 
                             Inactivo
 
