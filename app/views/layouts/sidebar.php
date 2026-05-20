@@ -8,7 +8,7 @@
 
             <div class="w-14 h-14 rounded-2xl overflow-hidden bg-orange-500 shadow-lg">
 
-                <img src="<?= URL; ?>/assets/img/logo/logo.png" alt="Logo" class="w-full h-full object-cover">
+                <img src="<?= URL; ?>/assets/img/banner/logo.png" alt="Logo" class="w-full h-full object-cover">
 
             </div>
 
@@ -96,6 +96,15 @@
             <span>🌐</span>
 
             <span>Empresa</span>
+
+        </a>
+
+                <a href="<?= URL; ?>/usuarios"
+            class="flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-gray-800 transition">
+
+            <span>👥</span>
+
+            <span>Usuarios</span>
 
         </a>
 

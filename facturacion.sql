@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-05-2026 a las 04:48:52
+-- Tiempo de generación: 20-05-2026 a las 18:03:41
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,21 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `facturacion`
 --
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `categorias`
---
-
-CREATE TABLE `categorias` (
-  `id` int(11) NOT NULL,
-  `empresa_id` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  `estado` tinyint(1) DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- --------------------------------------------------------
 
@@ -253,7 +238,8 @@ CREATE TABLE `empresas` (
 
 INSERT INTO `empresas` (`id`, `plan_id`, `razon_social`, `nit`, `dv`, `direccion`, `telefono`, `correo`, `resolucion_dian`, `prefijo_factura`, `rango_desde`, `rango_hasta`, `fecha_vencimiento`, `logo`, `estado`, `created_at`, `municipio_id`, `departamento_id`, `regimen_id`, `responsabilidad_fiscal_id`, `tipo_documento_id`) VALUES
 (2, 1, 'FRAGUA', '1122121271', '2', 'Av 1 AN # 0A-70', '3209839356', 'saul.fragua1988@gmail.com', '', '', 0, 0, '0000-00-00', '1779244494_mapa.png', 'ACTIVA', '2026-05-19 19:00:01', 806, 54, 2, 5, 1),
-(3, 1, 'qwerty', '1', '', '', '3209839356', '1@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, 'ACTIVA', '2026-05-20 02:36:26', NULL, NULL, NULL, NULL, NULL);
+(3, 1, 'qwerty', '1', '', '', '3209839356', '1@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, 'ACTIVA', '2026-05-20 02:36:26', NULL, NULL, NULL, NULL, NULL),
+(4, 1, 'qwerty', '999999', '', '', '3000000000', 'ss@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, 'ACTIVA', '2026-05-20 14:58:02', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1505,7 +1491,7 @@ INSERT INTO `planes` (`id`, `nombre`, `precio`, `limite_usuarios`, `limite_factu
 CREATE TABLE `productos` (
   `id` int(11) NOT NULL,
   `empresa_id` int(11) NOT NULL,
-  `categoria_id` int(11) DEFAULT NULL,
+  `tipo` enum('PRODUCTO','SERVICIO') NOT NULL DEFAULT 'PRODUCTO',
   `codigo` varchar(50) NOT NULL,
   `nombre` varchar(150) NOT NULL,
   `descripcion` text DEFAULT NULL,
@@ -1514,8 +1500,17 @@ CREATE TABLE `productos` (
   `stock` int(11) DEFAULT 0,
   `unidad_medida` varchar(50) DEFAULT NULL,
   `estado` tinyint(1) DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `imagen` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `productos`
+--
+
+INSERT INTO `productos` (`id`, `empresa_id`, `tipo`, `codigo`, `nombre`, `descripcion`, `precio`, `iva`, `stock`, `unidad_medida`, `estado`, `created_at`, `imagen`) VALUES
+(2, 2, 'PRODUCTO', '0101', 'Camara', 'camara bala lente 2.3mm dahua', 75000.00, 0.00, 0, 'unidad', 1, '2026-05-20 14:49:59', '1779288743_Captura de pantalla 2026-05-12 091227.png'),
+(3, 2, 'SERVICIO', '0202', 'Manteniemiento', 'manteniento preventivo', 15000.00, 0.00, 0, 'unidad', 1, '2026-05-20 14:50:37', NULL);
 
 -- --------------------------------------------------------
 
@@ -1625,19 +1620,14 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `empresa_id`, `nombre`, `correo`, `password`, `rol`, `foto`, `ultimo_login`, `estado`, `created_at`) VALUES
-(1, 2, 'SAUL', 'saul.fragua1988@gmail.com', '$2y$10$5HAXSwioYjKw5Z321kbU1O32VCc9JYBwqcHdV440JxqdJ.igeOU0a', 'ADMIN', NULL, '2026-05-19 21:40:35', 1, '2026-05-19 19:00:02'),
-(2, 3, 'qwerty', '1@gmail.com', '$2y$10$BBLAo6bfXKxIZJNPxkt8cOlvA/Zm6PUDAGlezR90fHcFK4GG95TbK', 'ADMIN', NULL, '2026-05-19 21:36:32', 1, '2026-05-20 02:36:26');
+(1, 2, 'SAUL FRAGUA NOVA', 'saul.fragua1988@gmail.com', '$2y$10$5HAXSwioYjKw5Z321kbU1O32VCc9JYBwqcHdV440JxqdJ.igeOU0a', 'ADMIN', NULL, '2026-05-20 10:26:22', 1, '2026-05-19 19:00:02'),
+(2, 3, 'qwerty', '1@gmail.com', '$2y$10$BBLAo6bfXKxIZJNPxkt8cOlvA/Zm6PUDAGlezR90fHcFK4GG95TbK', 'ADMIN', NULL, '2026-05-19 21:36:32', 1, '2026-05-20 02:36:26'),
+(3, 2, 'JUGADOR', 's1@gmail.com', '$2y$10$n9LFA3vn.xh6eL/Qd8cNaelN88TWGFvH8yp04McPd6Tp.ebLjU0DK', 'EMPLEADO', '1779280350_Captura de pantalla 2026-05-12 091415.png', '2026-05-20 07:32:45', 1, '2026-05-20 12:26:07'),
+(4, 4, 'pedro', 'ss@gmail.com', '$2y$10$Xvc.8.MyZA3.AlMBq/nVZeyfcqRdbhsEXW2N7U7k8hRcNbc.p7tky', 'ADMIN', NULL, '2026-05-20 09:58:10', 1, '2026-05-20 14:58:02');
 
 --
 -- Índices para tablas volcadas
 --
-
---
--- Indices de la tabla `categorias`
---
-ALTER TABLE `categorias`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_categoria_empresa` (`empresa_id`);
 
 --
 -- Indices de la tabla `clientes`
@@ -1764,7 +1754,6 @@ ALTER TABLE `planes`
 ALTER TABLE `productos`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `empresa_id` (`empresa_id`,`codigo`),
-  ADD KEY `fk_producto_categoria` (`categoria_id`),
   ADD KEY `idx_producto_empresa` (`empresa_id`);
 
 --
@@ -1798,12 +1787,6 @@ ALTER TABLE `usuarios`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
-
---
--- AUTO_INCREMENT de la tabla `categorias`
---
-ALTER TABLE `categorias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `clientes`
@@ -1851,7 +1834,7 @@ ALTER TABLE `detalle_facturas`
 -- AUTO_INCREMENT de la tabla `empresas`
 --
 ALTER TABLE `empresas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `facturas`
@@ -1893,7 +1876,7 @@ ALTER TABLE `planes`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `regimenes`
@@ -1917,17 +1900,11 @@ ALTER TABLE `tipos_documento`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
 --
-
---
--- Filtros para la tabla `categorias`
---
-ALTER TABLE `categorias`
-  ADD CONSTRAINT `fk_categoria_empresa` FOREIGN KEY (`empresa_id`) REFERENCES `empresas` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `clientes`
@@ -2018,7 +1995,6 @@ ALTER TABLE `pagos`
 -- Filtros para la tabla `productos`
 --
 ALTER TABLE `productos`
-  ADD CONSTRAINT `fk_producto_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `fk_producto_empresa` FOREIGN KEY (`empresa_id`) REFERENCES `empresas` (`id`) ON DELETE CASCADE;
 
 --

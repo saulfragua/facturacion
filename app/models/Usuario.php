@@ -84,4 +84,141 @@ class Usuario
 
         return $this->db->execute();
     }
+
+    public function listar($empresa_id)
+{
+    $this->db->query("
+        SELECT *
+        FROM usuarios
+        WHERE empresa_id = :empresa_id
+        ORDER BY id DESC
+    ");
+
+    $this->db->bind(':empresa_id', $empresa_id);
+
+    return $this->db->resultSet();
+}
+
+// ======================================
+// CREAR USUARIO
+// ======================================
+
+public function crearUsuario($data)
+{
+    $this->db->query("
+        INSERT INTO usuarios (
+
+            empresa_id,
+            nombre,
+            correo,
+            password,
+            rol,
+            foto,
+            estado
+
+        ) VALUES (
+
+            :empresa_id,
+            :nombre,
+            :correo,
+            :password,
+            :rol,
+            :foto,
+            :estado
+        )
+    ");
+
+    foreach($data as $key => $value){
+
+        $this->db->bind(
+            ':' . $key,
+            $value
+        );
+    }
+
+    return $this->db->execute();
+}
+
+// ======================================
+// OBTENER USUARIO
+// ======================================
+
+public function obtenerUsuario($id, $empresa_id)
+{
+    $this->db->query("
+        SELECT *
+        FROM usuarios
+        WHERE id = :id
+        AND empresa_id = :empresa_id
+        LIMIT 1
+    ");
+
+    $this->db->bind(':id', $id);
+
+    $this->db->bind(
+        ':empresa_id',
+        $empresa_id
+    );
+
+    return $this->db->single();
+}
+
+// ======================================
+// ACTUALIZAR
+// ======================================
+
+public function actualizar($data)
+{
+    $sql = "
+
+        UPDATE usuarios SET
+
+            nombre = :nombre,
+
+            correo = :correo,
+
+            rol = :rol,
+
+            estado = :estado
+
+    ";
+
+    // PASSWORD
+
+    if(isset($data['password'])){
+
+        $sql .= "
+            , password = :password
+        ";
+    }
+
+    // FOTO
+
+    if(isset($data['foto'])){
+
+        $sql .= "
+            , foto = :foto
+        ";
+    }
+
+    $sql .= "
+
+        WHERE id = :id
+
+        AND empresa_id = :empresa_id
+
+    ";
+
+    $this->db->query($sql);
+
+    foreach($data as $key => $value){
+
+        $this->db->bind(
+            ':' . $key,
+            $value
+        );
+    }
+
+    return $this->db->execute();
+}
 }
